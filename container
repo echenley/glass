@@ -1,0 +1,16 @@
+container
+	- header
+		- logo
+		- title
+		- tagline
+	- body
+		- post title
+		- breadcrumb
+		- content
+		- sharing
+	- footer
+		- copyright
+		- simple menu
+
+many things hidden unless hovered over
+	- site tagline

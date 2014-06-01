@@ -1,0 +1,136 @@
+/*
+Theme Name: Glass
+Author: Evan Henley
+Author URI: http://henleyedition.com/
+====================================== */
+
+
+/* Colors and Other Variables
+====================================== */
+
+// Colors
+$primary-dark:  #000;
+$primary-light: #f0f0f0;
+$header-bg:     $primary-dark;
+$link:          #7A8E9D;
+$link-hover:    darken($link, 10%);
+
+// Media Query Breakpoints
+$breakpoints: (768px,1280px);
+
+/* Typography
+====================================== */
+
+$sans-serif: sans-serif;
+
+/* Mixins
+====================================== */
+
+
+/* Normalize
+====================================== */
+@import '_normalize';
+
+a {
+	text-decoration: none;
+	color: $link;
+	&:hover {
+		color: $link-hover;
+	}
+}
+
+
+/* Placeholders
+====================================== */
+
+
+
+/* Structure
+====================================== */
+
+body {}
+
+.glass-wrapper {}
+
+
+/* Header
+====================================== */
+
+.glass-header {}
+.glass-logo {}
+.glass-blog-title {}
+.glass-blog-description{}
+
+
+/* Footer
+====================================== */
+
+.glass-footer {}
+.glass-subscribe {}
+.icon-rss {}
+.glass-footer-text {}
+
+
+/* Main Content
+====================================== */
+
+.home-template {}
+.post-template {}
+
+
+.glass-main {}
+
+// shared properties on both home-template and post-template
+.glass-date {}
+.glass-tags {}
+.glass-pagination {}
+
+.glass-post-header {}
+.glass-post-title {}
+
+
+/* Blog Index
+====================================== */
+
+// unique styling for elements on home-template
+.home-template {
+	.glass-post-header {}
+	.glass-post-title {}
+}
+.glass-post-listing {}
+.glass-post-excerpt {}
+
+
+/* Blog Post
+====================================== */
+
+.tag-first-post {}
+.tag-testing {}
+
+// unique styling for elements on post-template
+.post-template {
+	.glass-post-header {}
+	.glass-post-title {}
+}
+
+.glass-post {}
+.glass-post-body {}
+
+// sharing
+.glass-sharing {}
+.glass-share-header {}
+.glass-share {}
+
+
+/* Miscellaneous
+====================================== */
+
+
+/* Media Queries
+====================================== */
+
+@import "_mq1";
+@import "_mq2";
+
+
+

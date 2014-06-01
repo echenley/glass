@@ -1,0 +1,17 @@
+<div class="glass-header">
+
+	{{#if @blog.logo}}
+		<a class="glass-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="{{@blog.title}}" /></a>
+	{{/if}}
+
+	<div class="glass-blog-title">
+		<a title="{{@blog.title}}" href="{{@blog.url}}">
+		{{{@blog.title}}}
+		</a>
+	</div>
+
+	<p class="glass-blog-description">
+		{{@blog.description}}
+	</p>
+
+</div>

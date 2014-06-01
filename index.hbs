@@ -1,0 +1,36 @@
+{{!< default}}
+
+<main class="glass-main" role="main">
+
+    {{#foreach posts}}
+
+        <article class="glass-post-listing {{#if @odd}}odd{{else}}even{{/if}}" role="article" itemscope itemtype="http://schema.org/Article">
+
+            <header class="glass-post-header">
+                <time class="glass-date" datetime="{{date format="YYYY-MM-DD"}}" itemprop="datePublished">
+                    {{date format='dddd DD MMM YYYY'}}
+                </time>
+                <h3 class="glass-post-title" itemprop="headline"><a href="{{{url}}}">{{title}}</a></h3>
+            </header>
+
+            <section class="glass-post-excerpt" itemprop="articleBody">
+                {{excerpt}}
+            </section>
+
+            {{#if tags}}
+                <div class="glass-tags">
+                    Tags: {{tags separator=" | "}}
+                </div>
+            {{/if}}
+
+        </article>
+
+    {{/foreach}}
+
+    {{#if pagination}}
+        <div class="glass-pagination">
+            {{{pagination}}}
+        </div>
+    {{/if}}
+
+</main>
