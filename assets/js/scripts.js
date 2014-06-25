@@ -17,7 +17,8 @@
 		navbar_height = $navbar.outerHeight(),
 		scrolled = false,
 		last_scroll_top = 0,
-		required_scroll = 20;
+		required_scroll = 20,
+		prev_window_width = $window.width();
 
 
 
@@ -128,12 +129,17 @@
 		});
 	}
 
+	// set header height
+	function set_header_height() {
+		// set cover height to window height
+		$('.glass-header').height(window_height);
+	}
+
 	// sets up cover image
 	function set_cover_image() {
 		var $cover = $('img[src$="#cover"]');
 
-		// set cover height to window height
-		$('.glass-header').height(window_height);
+		set_header_height();
 
 		if ($cover.length) {
 			var cover_url = $cover.attr('src');
@@ -280,6 +286,16 @@
 		});
 	}
 
+	// called if window is resized
+	function resize_window() {
+		var new_window_width = $window.width();
+		if ($window.width() !== prev_window_width) {
+			prev_window_width = $window.width();
+			set_header_height();
+			center_title();
+		}
+	}
+
 	function init() {
 
 		// sets the initial app state if there isn't one set (e.g. after reload)
@@ -308,7 +324,7 @@
 			window.requestAnimationFrame(animate_header);
 
 			// used to toggle navbar on scroll
-			$(window).scroll(function() {
+			$window.scroll(function() {
 				scrolled = true;
 			});
 
@@ -321,6 +337,10 @@
 			}, 200);
 		}
 
+
+		$window.resize(function() {
+			resize_window();
+		});
 
 		// scroll-down button behavior
 		$('.glass-scroll-button').click(function(e) {

@@ -4,7 +4,9 @@
 
 		{{#if posts}} <!-- if homepage -->
             <h1 class="glass-headline">{{@blog.title}}</h1>
-	        <p class="glass-blog-description">{{@blog.description}}</p>
+            {{#if @blog.description}}
+		        <p class="glass-blog-description">{{@blog.description}}</p>
+		    {{/if}}
 	    {{else}}{{#if page}} <!-- if static page -->
 		    <h1 class="glass-headline" itemprop="headline">{{title}}</h1>
 		{{else}} <!-- if post -->
