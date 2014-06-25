@@ -329,10 +329,8 @@
 		// prevent aminations on mobile
 		if (window_width > 768) {
 
-			// prevent header animation on large screens due to lag
-			if (window_width < 1600) {
-				window.requestAnimationFrame(animate_header);
-			}
+			// animate the header on scroll
+			window.requestAnimationFrame(animate_header);
 
 			// used to toggle navbar on scroll
 			$window.scroll(function() {
