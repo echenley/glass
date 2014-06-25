@@ -289,14 +289,16 @@
 
 	// called if window is resized
 	function resize_window() {
-		var new_window_width = $window.width();
+		var new_window_width = $window.width(),
+			new_window_height = $window.height();
 
-		if (new_window_width === window_width) {
+		if (new_window_width === window_width && new_window_height === window_height) {
 			return;
 		}
 
 		// set new window width variable
 		window_width = new_window_width;
+		window_height = new_window_height;
 
 		// reset header height and center the title
 		set_header_height();
