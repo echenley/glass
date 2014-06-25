@@ -199,7 +199,10 @@ body {
 	background: $transparent-dark;
 	color: $primary-light;
 	@extend %border-radius;
-	max-width: $content-width * .9;
+	max-width: $content-width;
+	@media screen and (max-width: nth($breakpoints, 1)) {
+		max-width: 90%;
+	}
 }
 
 #subtitle,
