@@ -202,14 +202,10 @@ body {
 	max-width: $content-width;
 }
 
-#subtitle {
-	text-align: center;
-	line-height: 1.2;
-	margin: $margin-medium 0 $margin-small 0;
-}
-
+#subtitle,
 .glass-blog-description {
 	line-height: $line-height;
+	margin: $margin-medium 0 $margin-small 0;
 }
 
 .glass-scroll-button {
