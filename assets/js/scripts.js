@@ -329,7 +329,7 @@
 		if (window_width > 768) {
 
 			// prevent header animation on large screens due to lag
-			if (window_width < 1280) {
+			if (window_width < 1600) {
 				window.requestAnimationFrame(animate_header);
 			}
 
