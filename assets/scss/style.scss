@@ -348,14 +348,10 @@ body {
 }
 .page-number {
 	font-size: 0.9em;
-}
-
-@media screen and (max-width: nth($breakpoints, 1)) {
-	.page-number {
+	@media screen and (max-width: nth($breakpoints, 1)) {
 		opacity: 0;
 	}
 }
-
 
 /* Blog Index
 ====================================== */
