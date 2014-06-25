@@ -18,7 +18,7 @@
 		scrolled = false,
 		last_scroll_top = 0,
 		required_scroll = 20,
-		prev_window_width = $window.width();
+		window_width = $window.width();
 
 
 
@@ -125,7 +125,7 @@
 		// centers the header wrapper
 		$header_wrapper.css({
 			'top': (navbar_height + window_height - $header_wrapper.outerHeight()) / 2,
-			'left': ($window.width() - $header_wrapper.outerWidth()) / 2
+			'left': (window_width - $header_wrapper.outerWidth()) / 2
 		});
 	}
 
@@ -148,7 +148,7 @@
 			// set the new cover image
 			$('.glass-cover-image, .glass-cover-image-back').css('backgroundImage', 'url(' + cover_url + ')');
 
-			// $('.glass-cover-image, .glass-cover-image-back').attr('src', cover_url).width($window.width());
+			// $('.glass-cover-image, .glass-cover-image-back').attr('src', cover_url).width(window_width);
 		}
 	}
 
@@ -289,12 +289,15 @@
 	// called if window is resized
 	function resize_window() {
 		var new_window_width = $window.width();
-		
-		if (new_window_width === prev_window_width) {
+
+		if (new_window_width === window_width) {
 			return;
 		}
 
-		prev_window_width = $window.width();
+		// set new window width variable
+		window_width = new_window_width;
+
+		// reset header height and center the title
 		set_header_height();
 		center_title();
 	}
@@ -323,10 +326,10 @@
 		responsive_video_setup();
 
 		// prevent aminations on mobile
-		if ($window.width() > 768) {
+		if (window_width > 768) {
 
 			// prevent header animation on large screens due to lag
-			if ($window.width() < 1280) {
+			if (window_width < 1280) {
 				window.requestAnimationFrame(animate_header);
 			}
 
