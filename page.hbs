@@ -1,0 +1,35 @@
+{{!< default}}
+
+<div id="glass-main">
+
+{{#post}}
+
+    <article class="glass-post" id="glass-page-body" role="article" itemscope itemtype="http://schema.org/Article">
+
+        {{> header}}
+
+        <section class="glass-post-body cf" itemprop="articleBody">
+            <div class="glass-wrapper">
+                
+                <div class="glass-post-content">
+                    {{content}}
+                </div>
+
+                {{#if pagination}}
+                    <div class="glass-pagination">
+                        {{{pagination}}}
+                    </div>
+                {{/if}}
+
+            </div>
+        </section>
+
+    </article>
+</div>
+
+{{/post}}
+
+
+
+
+
