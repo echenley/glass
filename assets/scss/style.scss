@@ -350,6 +350,10 @@ body {
 	font-size: 0.9em;
 }
 
+@media screen and (max-width: nth($breakpoints, 1)) {
+	display: none;
+}
+
 
 /* Blog Index
 ====================================== */
