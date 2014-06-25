@@ -122,10 +122,11 @@
 	}
 
 	function center_title() {
+		var margin_x = Math.floor((window_width - $header_wrapper.outerWidth()) / 2);
 		// centers the header wrapper
 		$header_wrapper.css({
-			'top': (navbar_height + window_height - $header_wrapper.outerHeight()) / 2,
-			'left': (window_width - $header_wrapper.outerWidth()) / 2
+			'top': Math.floor((navbar_height + window_height - $header_wrapper.outerHeight()) / 2),
+			'left': margin_x
 		});
 	}
 
@@ -349,6 +350,10 @@
 
 
 		$window.resize(function() {
+			resize_window();
+		});
+
+		$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
 			resize_window();
 		});
 

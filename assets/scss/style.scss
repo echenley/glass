@@ -199,7 +199,7 @@ body {
 	background: $transparent-dark;
 	color: $primary-light;
 	@extend %border-radius;
-	max-width: $content-width;
+	max-width: $content-width * .9;
 }
 
 #subtitle,
@@ -685,6 +685,11 @@ sub {
 .hidden {
 	display: none !important;
 	visibility: hidden !important;
+}
+
+.highlight {
+	padding: 2px 4px;
+	background: $light-beige;
 }
 
 .full-width {
