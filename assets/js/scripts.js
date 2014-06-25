@@ -320,7 +320,7 @@
 		responsive_video_setup();
 
 		// prevent aminations on mobile
-		if ($window.width() > 768) {
+		if ($window.width() > 768 && $window.width() < 1280) {
 			window.requestAnimationFrame(animate_header);
 
 			// used to toggle navbar on scroll
