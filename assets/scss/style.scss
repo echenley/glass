@@ -336,6 +336,7 @@ body {
 	position: relative;
 	@extend %line-height;
 	text-align: center;
+	overflow: hidden;
 }
 
 .newer-posts {
@@ -353,6 +354,14 @@ body {
 @media screen and (max-width: nth($breakpoints, 1)) {
 	.page-number {
 		display: none;
+	}
+	.newer-posts {
+		position: relative;
+		float: left;
+	}
+	.older-posts {
+		position: relative;
+		float: right;
 	}
 }
 
