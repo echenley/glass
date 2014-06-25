@@ -1,36 +1,52 @@
 {{!< default}}
 
-<main class="glass-main" role="main">
+<div id="glass-main">
 
-    {{#foreach posts}}
+    {{> header}}
 
-        <article class="glass-post-listing {{#if @odd}}odd{{else}}even{{/if}}" role="article" itemscope itemtype="http://schema.org/Article">
+    <div class="glass-post-list" id="glass-page-body">
+        <div class="glass-wrapper" id="glass-posts">
+            <p class="hidden"><img src="{{@blog.cover}}#cover"></p>
 
-            <header class="glass-post-header">
-                <time class="glass-date" datetime="{{date format="YYYY-MM-DD"}}" itemprop="datePublished">
-                    {{date format='dddd DD MMM YYYY'}}
-                </time>
-                <h3 class="glass-post-title" itemprop="headline"><a href="{{{url}}}">{{title}}</a></h3>
-            </header>
+            <div class="glass-page-number">
+                Blog: Page {{pagination.page}}
+            </div>
 
-            <section class="glass-post-excerpt" itemprop="articleBody">
-                {{excerpt}}
-            </section>
+            {{#foreach posts}}
+                <article class="glass-post-list-item" role="article" itemscope itemtype="http://schema.org/Article">
 
-            {{#if tags}}
-                <div class="glass-tags">
-                    Tags: {{tags separator=" | "}}
-                </div>
-            {{/if}}
+                    <header class="glass-post-list-item-header">
+                        <time class="glass-date" datetime="{{date format="YYYY-MM-DD"}}" itemprop="datePublished">
+                            {{date format='MMMM DD, YYYY'}}
+                        </time>
+                        <h3 class="glass-post-list-title" itemprop="headline"><a href="{{url}}">{{title}}</a></h3>
+                    </header>
 
-        </article>
+                    <section class="glass-post-excerpt cf" itemprop="articleBody">
+                        {{excerpt words=80}} &hellip; <a class="glass-button glass-read-more" href="{{url}}" title="Keep reading: {{title}}">Keep Reading &rArr;</a>
+                    </section>
 
-    {{/foreach}}
+                    {{#if tags}}
+                        <div class="glass-tags">
+                            Tags: {{tags separator=" &middot; "}}
+                        </div>
+                    {{/if}}
 
-    {{#if pagination}}
-        <div class="glass-pagination">
-            {{{pagination}}}
+                </article>
+                {{#if @last}}
+                    <hr>
+                {{else}}
+                    <hr class="squares">
+                {{/if}}
+            {{/foreach}}
+
         </div>
-    {{/if}}
 
-</main>
+        {{#if pagination}}
+            <div class="glass-pagination glass-wrapper">
+                {{{pagination}}}
+            </div>
+        {{/if}}
+
+    </div>
+</div>

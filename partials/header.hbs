@@ -1,17 +1,17 @@
-<div class="glass-header">
+<header class="glass-header">
 
-	{{#if @blog.logo}}
-		<a class="glass-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="{{@blog.title}}" /></a>
-	{{/if}}
+    <div class="glass-header-wrapper">
 
-	<div class="glass-blog-title">
-		<a title="{{@blog.title}}" href="{{@blog.url}}">
-		{{{@blog.title}}}
-		</a>
-	</div>
+		{{#if posts}} <!-- if homepage -->
+            <h1 class="glass-headline">{{@blog.title}}</h1>
+	        <p class="glass-blog-description">{{@blog.description}}</p>
+	    {{else}}{{#if page}} <!-- if static page -->
+		    <h1 class="glass-headline" itemprop="headline">{{title}}</h1>
+		{{else}} <!-- if post -->
+	        <h1 class="glass-headline" itemprop="headline">{{title}}</h1>
+        {{/if}}{{/if}}
 
-	<p class="glass-blog-description">
-		{{@blog.description}}
-	</p>
+    </div>
 
-</div>
+    <a class="glass-scroll-button" href="#glass-page-body"></a>
+</header>
