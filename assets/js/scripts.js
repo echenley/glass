@@ -289,11 +289,14 @@
 	// called if window is resized
 	function resize_window() {
 		var new_window_width = $window.width();
-		if ($window.width() !== prev_window_width) {
-			prev_window_width = $window.width();
-			set_header_height();
-			center_title();
+		
+		if (new_window_width === prev_window_width) {
+			return;
 		}
+
+		prev_window_width = $window.width();
+		set_header_height();
+		center_title();
 	}
 
 	function init() {
@@ -320,8 +323,12 @@
 		responsive_video_setup();
 
 		// prevent aminations on mobile
-		if ($window.width() > 768 && $window.width() < 1280) {
-			window.requestAnimationFrame(animate_header);
+		if ($window.width() > 768) {
+
+			// prevent header animation on large screens due to lag
+			if ($window.width() < 1280) {
+				window.requestAnimationFrame(animate_header);
+			}
 
 			// used to toggle navbar on scroll
 			$window.scroll(function() {
