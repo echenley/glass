@@ -169,6 +169,7 @@ body {
 .glass-headline {
 	font-size: 4.2rem;
 	line-height: 1.1;
+	margin-bottom: 0;
 	@media screen and (max-width: nth($breakpoints, 1)) {
 		font-size: 2rem;
 	}
