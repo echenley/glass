@@ -351,7 +351,9 @@ body {
 }
 
 @media screen and (max-width: nth($breakpoints, 1)) {
-	display: none;
+	.page-number {
+		display: none;
+	}
 }
 
 
