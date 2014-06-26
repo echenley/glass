@@ -116,6 +116,7 @@ $monospace: Consolas, Monaco, 'Andale Mono', monospace;
 }
 
 %button {
+	display: inline-block;
 	padding: 6px 12px;
 	@extend %border-radius;
 	font-size: 0.9em;
