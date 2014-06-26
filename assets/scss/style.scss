@@ -658,7 +658,8 @@ pre {
 	line-height: 1.2;
 	@extend %border-radius;
 
-	&.wrap-text {
+	&.wrap-text,
+	&.wrap-text code {
 		white-space: pre-wrap;
 	}
 }
