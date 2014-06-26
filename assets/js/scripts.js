@@ -294,7 +294,7 @@
 		      var target = $(this.hash);
 		      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
 		      if (target.length) {
-		        page_scroll(target.offset().top, 800);
+		        page_scroll(target.offset().top, 1000);
 		        return false;
 		      }
 		    }
