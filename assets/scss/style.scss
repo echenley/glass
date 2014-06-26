@@ -51,6 +51,11 @@ $monospace: Consolas, Monaco, 'Andale Mono', monospace;
 ====================================== */
 @import '_reset';
 
+* {
+	-ms-word-wrap: break-word;
+	word-wrap: break-word;
+}
+
 *, *:before, *:after {
 	box-sizing: border-box;
 }
@@ -111,7 +116,7 @@ $monospace: Consolas, Monaco, 'Andale Mono', monospace;
 }
 
 %button {
-	padding: 1px 8px;
+	padding: 6px 12px;
 	@extend %border-radius;
 	font-size: 0.9em;
 	&:hover {
@@ -121,6 +126,10 @@ $monospace: Consolas, Monaco, 'Andale Mono', monospace;
 
 %transition-200ms {
 	@include transition(all 0.2s);
+}
+
+%standard-margin {
+	margin: $margin-medium 0;
 }
 
 
@@ -388,6 +397,7 @@ body {
 
 .glass-read-more {
 	float: right;
+	padding: 1px 8px;
 }
 
 
@@ -432,7 +442,6 @@ body {
 h1,h2,h3,h4,h5,h6 {
 	font-family: $serif;
 	font-weight: 300;
-	margin-bottom: $margin-medium;
 	clear: both;
 }
 
@@ -456,20 +465,31 @@ h4 {
 	font-size: 1.4rem;
 }
 
-h5,h6 {
-	text-decoration: underline;
+h5 {
+	font-size: 1.3rem;
+	&:before {
+		content: "\00bb\20";
+	}
+}
+
+h6 {
+	font-size: 1.2rem;
+	&:before {
+		content: "\00bb\20\00bb\20";
+	}
 }
 
 .glass-post {
-	h2,h3,h4 {
-		padding-bottom: 0.2em;
-		margin: $margin-small 0;
-	}
 
 	h2 {
+		margin: $margin-large 0;
+		padding-bottom: 0.2em;
 		border-bottom: 1px solid $primary-color;
 		color: $primary-color;
-		margin: $margin-large 0;
+	}
+
+	h3,h4 {
+		margin: $margin-medium 0;
 	}
 
 	h3:before {
@@ -479,26 +499,33 @@ h5,h6 {
 	h4:before {
 		content: "\21D2\21D2\20"
 	}
+
+	h5,h6 {
+		margin: $margin-small 0;
+	}
 }
 
 // lists
 
 ul,
 ol {
-    margin: $margin-medium 0;
+	@extend %standard-margin;
 	padding-left: 1.5em;
+	* {
+		margin: 0;
+	}
 }
 ol {
     list-style: decimal outside;
     ul,ol {
-        margin: 0 0 0 0.5em;
+        margin: 0.5em 0 0.5em 0.5em;
 		padding-left: 1em;
     }
 }
 ul {
     list-style: disc outside;
     ul,ol {
-        margin: 0 0 0 0.5em;
+        margin: 0.5em 0 0.5em 0.5em;
 		padding-left: 1em;
     }
 }
@@ -512,21 +539,21 @@ table {
     border-bottom: 1px solid $primary-dark;
     border-collapse: collapse;
     font-size: 0.9em;
+	text-align: left;
 }
 thead {
 	border-bottom: 1px solid $primary-dark;
-	text-align: left;
 }
 th,td {
     padding: 0.6em;
 }
 th {
-    font-weight: bold;
+    font-weight: 400;
 }
 tbody tr {
 	border-bottom: 1px solid $line-color;
 	&:hover {
-	    background: rgba($line-color, 0.2);
+	    background: rgba($line-color, 0.1);
 	}
 }
 
@@ -544,9 +571,9 @@ abbr {
 }
 
 blockquote {
-	margin: $margin-medium 0;
+	@extend %standard-margin;
 	padding: $margin-small;
-	border-left: 10px solid rgba($primary-color,0.8);
+	border-left: $margin-small/2 solid rgba($primary-color,0.8);
 	background: $light-beige;
 	clear: both;
 	@extend %border-radius;
@@ -563,9 +590,9 @@ cite {
 
 code {
 	display: inline-block;
+	padding: 2px 4px;
 	font-family: $monospace;
 	background: $light-beige;
-	padding: 2px 4px;
 	font-size: 0.8em;
 	@extend %border-radius;
 }
@@ -578,7 +605,7 @@ hr {
 	border: 0;
 	text-align: center;
 	color: $primary-color;
-	font-size: 1.6em;
+	font-size: 1.4em;
 	&:before {
 		content: "\2014\20\00a7\20\2014";
 	}
@@ -619,9 +646,10 @@ iframe {
     margin: $margin-medium auto;
 }
 p {
-	margin: $margin-medium 0;
+	@extend %standard-margin;
 }
 pre {
+	@extend %standard-margin;
 	padding: 1em;
     overflow: auto;
 	white-space: pre;
@@ -629,6 +657,10 @@ pre {
 	font-family: $monospace;
 	line-height: 1.2;
 	@extend %border-radius;
+
+	&.wrap-text {
+		white-space: pre-wrap;
+	}
 }
 time {}
 strong {
@@ -660,14 +692,14 @@ sub {
 }
 
 .bubble {
-	margin: $margin-medium 0;
+	@extend %standard-margin;
 	padding: 1em;
 	background: $light-beige;
 	text-align: center;
 	@extend %border-radius;
 }
 
-.glass-button {
+.button {
 	@extend %button;
 	background: $primary-color;
 	color: $primary-light;
@@ -676,13 +708,17 @@ sub {
 	}
 }
 
-.glass-button-dark {
+.button-dark {
 	@extend %button;
 	background: lighten($primary-dark, 20%);
 	color: $primary-light;
 	&:hover {
 		background: lighten($primary-dark, 10%);
 	}
+}
+
+.button-big {
+	padding: 12px 24px;
 }
 
 .hidden {
@@ -693,6 +729,18 @@ sub {
 .highlight {
 	padding: 2px 4px;
 	background: $light-beige;
+}
+
+.no-margin {
+	margin: 0 !important;
+}
+
+.pullquote {
+	float: right;
+	@extend img.align-right;
+	border-left: none;
+	border-right: $margin-small/2 solid rgba($primary-color,0.8);
+	font-size: 1.3em;
 }
 
 .full-width {
