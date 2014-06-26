@@ -61,24 +61,6 @@
 	// END window.requestAnimationFrame() Shim
 
 
-	// Smooth scrolling hash links
-	// via http://css-tricks.com/snippets/jquery/smooth-scrolling/
-	$(function() {
-	  $('a[href*=#]:not([href=#])').click(function() {
-	    if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') && location.hostname === this.hostname) {
-	      var target = $(this.hash);
-	      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-	      if (target.length) {
-	        $('html,body').animate({
-	          scrollTop: target.offset().top
-	        }, 1000);
-	        return false;
-	      }
-	    }
-	  });
-	});
-
-
 	/* MAIN FUNCTIONS
 	============================================== */
 
@@ -304,6 +286,21 @@
 		});
 	}
 
+	function glass_smooth_scroll() {
+		// Smooth scrolling hash links
+		// via http://css-tricks.com/snippets/jquery/smooth-scrolling/
+		$('a[href*=#]:not([href=#])').click(function() {
+		    if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') && location.hostname === this.hostname) {
+		      var target = $(this.hash);
+		      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+		      if (target.length) {
+		        page_scroll(target.offset().top, 800);
+		        return false;
+		      }
+		    }
+		});
+	}
+
 	// called if window is resized
 	function resize_window() {
 		var new_window_width = $window.width(),
@@ -341,6 +338,8 @@
 		add_end_mark();
 		// resize captions to img width...
 		resize_captions();
+		// set smooth scrolling
+		glass_smooth_scroll();
 
 		// setup responsive videos
 		responsive_video_setup();
