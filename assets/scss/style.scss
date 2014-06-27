@@ -493,7 +493,7 @@ h6 {
 	}
 
 	h3:before {
-		content: "\21D2\20"
+		content: "\21D2\20";
 	}
 
 	h4,h5,h6 {
@@ -501,7 +501,7 @@ h6 {
 	}
 	
 	h4:before {
-		content: "\21D2\21D2\20"
+		content: "\21D2\20\21D2\20";
 	}
 }
 
