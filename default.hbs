@@ -39,7 +39,30 @@
 
     {{ghost_foot}}
 
+    {{! Glass scripts}}
     <script src="{{asset "js/scripts.js"}}"></script>
+    {{! Syntax highlighting w/ Prism.js}}
     <script src="{{asset "js/prism.js"}}"></script>
+    {{! Mathjax configuration}}
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">  
+        MathJax.Hub.Config({  
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},    
+            "HTML-CSS": {
+                scale: 90,
+                styles: {
+                    ".MathJax": {
+                        "background-color": "#f5f2f0",
+                        padding: "2px 4px"
+                    },
+                    ".MathJax nobr": {
+                        position: "relative",
+                        top: "-2px",
+                        left: "4px"
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

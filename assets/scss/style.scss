@@ -587,6 +587,9 @@ blockquote {
 cite {
 	display: block;
 	margin-top: $margin-small;
+	&:before {
+		content: "\2014\20"
+	}
 }
 
 code {
@@ -613,18 +616,9 @@ hr {
 }
 
 hr.squares {
-	font-size: 1em;
-	&:nth-of-type(4n+1):before {
-		content: "\2014\20\25F0\20\2014";
-	}
-	&:nth-of-type(4n+2):before {
-		content: "\2014\20\25F3\20\2014";
-	}
-	&:nth-of-type(4n+3):before {
-		content: "\2014\20\25F2\20\2014";
-	}
-	&:nth-of-type(4n+4):before {
-		content: "\2014\20\25F1\20\2014";
+	font-size: 0.9em;
+	&:before {
+		content: "\2014\20\25C8\20\2014";
 	}
 }
 
