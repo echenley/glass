@@ -777,3 +777,17 @@ img.align-left, .caption.align-left {
 /* Syntax Highlighting (prism.js)
 ====================================== */
 @import '_prism';
+
+/* Syntax Highlighting (prism.js)
+====================================== */
+
+.MathJax {
+	background-color: #f5f2f0;
+	padding: 2px 4px;
+}
+
+.MathJax nobr {
+	position: relative;
+	top: -2px;
+	left: 4px;
+}
