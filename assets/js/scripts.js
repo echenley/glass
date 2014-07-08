@@ -89,16 +89,6 @@
 		last_scroll_top = top;
 	}
 
-	function resize_captions() {
-		if ($captions.length) {
-			$captions.each(function() {
-				var $this = $(this),
-					new_caption_width = $('.glass-post-body .glass-wrapper').width();
-				$this.width(new_caption_width);
-			});
-		}
-	}
-
 	// adds end mark to end of posts
 	function add_end_mark() {
 		var $wrapper = $('.glass-post-content'),
@@ -203,6 +193,20 @@
 			});
 		}
 
+	}
+
+	function resize_captions() {
+
+		if ($captions.length) {
+			$captions.each(function() {
+				var $this = $(this);
+
+				$this.find('img').on('load', function() {
+					var new_caption_width = $(this).width();
+					$this.width(new_caption_width);
+				});
+			});
+		}
 	}
 
 	function update_pagination($new_page) {
@@ -371,12 +375,6 @@
 
 		$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
 			resize_window();
-		});
-
-		// scroll-down button behavior
-		$('.glass-scroll-button').click(function(e) {
-			e.preventDefault();
-			page_scroll(window_height, 1000);
 		});
 
 		// next and previous page action

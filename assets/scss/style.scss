@@ -681,6 +681,7 @@ sub {
 	font-size: 1rem;
 	text-align: center;
 	background: $light-beige;
+	@extend %max-width;
 	img {
 		margin: 0 auto 1em auto;
 	}
