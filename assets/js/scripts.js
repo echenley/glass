@@ -93,7 +93,7 @@
 		if ($captions.length) {
 			$captions.each(function() {
 				var $this = $(this),
-					new_caption_width = $this.find('img').width();
+					new_caption_width = $('.glass-post-body .glass-wrapper').width();
 				$this.width(new_caption_width);
 			});
 		}
