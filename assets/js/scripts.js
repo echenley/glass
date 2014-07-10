@@ -111,11 +111,15 @@
 	}
 
 	function center_title() {
-		var margin_x = Math.floor((window_width - $header_wrapper.outerWidth()) / 2);
-		// centers the header wrapper
+		// reset header wrapper css, then re-center the header wrapper
 		$header_wrapper.css({
-			'top': Math.floor((navbar_height + window_height - $header_wrapper.outerHeight()) / 2),
-			'left': margin_x
+			margin: 0,
+			width: 'auto',
+			left: 'auto',
+			bottom: 'auto'
+		}).css({
+			top: Math.floor((navbar_height + window_height - $header_wrapper.outerHeight()) / 2),
+			left: Math.floor((window_width - $header_wrapper.outerWidth()) / 2)
 		});
 	}
 
@@ -137,8 +141,6 @@
 			$cover.parent().remove();
 			// set the new cover image
 			$('.glass-cover-image, .glass-cover-image-back').css('backgroundImage', 'url(' + cover_url + ')');
-
-			// $('.glass-cover-image, .glass-cover-image-back').attr('src', cover_url).width(window_width);
 		}
 	}
 

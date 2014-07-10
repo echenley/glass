@@ -206,6 +206,10 @@ body {
 
 .glass-header-wrapper {
 	position: absolute;
+	bottom: 30%;
+	left: 50%;
+	width: 700px;
+	margin-left: -350px;
 	padding: $margin-medium;
 	background: $transparent-dark;
 	color: $primary-light;
@@ -214,6 +218,11 @@ body {
 	@media screen and (max-width: nth($breakpoints, 1)) {
 		max-width: 90%;
 	}
+}
+
+.glass-post-content #subtitle:before {
+	content: "Subtitle: ";
+	font-weight: 400;
 }
 
 #subtitle,
