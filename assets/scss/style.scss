@@ -34,12 +34,6 @@ $breakpoints: (768px,1280px);
 /* Typography
 ====================================== */
 
-// @font-face {
-//     font-family: dropcap;
-//     src: url(../fonts/BaronNeue.otf);
-// }
-
-// $dropcap: dropcap;
 $font-size: 110%;
 $line-height: 1.6;
 
@@ -227,7 +221,7 @@ body {
 
 #subtitle,
 .glass-blog-description {
-	line-height: $line-height;
+	@extend %line-height;
 	margin: $margin-small 0 0 0;
 }
 

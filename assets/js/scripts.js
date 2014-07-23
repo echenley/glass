@@ -346,7 +346,6 @@
 		resize_captions();
 		// set smooth scrolling
 		glass_smooth_scroll();
-
 		// setup responsive videos
 		responsive_video_setup();
 
