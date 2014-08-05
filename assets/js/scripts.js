@@ -300,6 +300,12 @@ glassApp.events = {
 		// delegate for internal links
 		delegate.on('click', internalLinks, function(e) {
 			e.preventDefault();
+
+			// allow command-click and control-click
+			if (e.metaKey || e.ctrlKey) {
+				return;
+			}
+			
 			var eventTarget = e.target;
 			// make sure target is an anchor tag, not some nested element
 			while (eventTarget && eventTarget.nodeName !== 'A') {
