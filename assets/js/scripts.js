@@ -1,400 +1,513 @@
-(function($) {
-
-	var $window = $(window),
-		// site_url = 'http://' + top.location.host.toString(),
-		// $internal_links = $('a[href^="' + site_url + '"], a[href^="/"], a[href^="./"], a[href^="../"], a[href^="#"]'),
-		// $cover = $('.glass-cover-image'),
-		window_height = $window.height(),
-		// $glass_main = $('#glass-main'),
-		$glass_posts = $('#glass-posts'),
-		$page_number = $('.page-number'),
-		$prev = $('.older-posts'),
-		$next = $('.newer-posts'),
-		$navbar = $('.glass-nav'),
-		$header_wrapper = $('.glass-header-wrapper'),
-		$captions = $('.caption'),
-		$all_videos = $('iframe[src*="//www.youtube.com"], iframe[src*="//player.vimeo.com"]'),
-		navbar_height = $navbar.outerHeight(),
-		scrolled = false,
-		last_scroll_top = 0,
-		required_scroll = 20,
-		window_width = $window.width();
+// @codekit-prepend "modules/dom-delegate.js"
+// @codekit-prepend "modules/smooth-scroll.js"
+// @codekit-prepend "modules/viewport-units-buggyfill.js"
+// @codekit-append "modules/classlist-shim.js"
+// @codekit-append "modules/requestAnimationFrame-shim.js"
+// @codekit-append "modules/prism.js"
 
 
+var glassApp = glassApp || {};
 
-	/* Plugins/Shims
-	============================================== */
-
-	// window.requestAnimationFrame() Shim
-	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-	 
-	// requestAnimationFrame polyfill by Erik Möller
-	// fixes from Paul Irish and Tino Zijdel
-	 
-	(function() {
-	    var lastTime = 0;
-	    var vendors = ['ms', 'moz', 'webkit', 'o'];
-	    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-	        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-	    }
-	 
-	    if (!window.requestAnimationFrame) {
-	        window.requestAnimationFrame = function(callback) {
-	            var currTime = new Date().getTime();
-	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-	              timeToCall);
-	            lastTime = currTime + timeToCall;
-	            return id;
-	        };
-	  	}
-	 
-	    if (!window.cancelAnimationFrame) {
-	        window.cancelAnimationFrame = function(id) {
-	            clearTimeout(id);
-	        };
-	    }
-	}());
-
-	// END window.requestAnimationFrame() Shim
+/* ============================
+ *  Initialize App
+ * ============================ */
 
 
-	/* MAIN FUNCTIONS
-	============================================== */
+glassApp.init = function() {
+	// 100vh fix for mobile safari...
+	viewportUnitsBuggyfill.init();
+	// page setup
+	glassApp.pageSetup.init();
+	// history management
+	glassApp.history.init();
+	// event binding
+	glassApp.events.init();
+};
 
-	// when down arrow (.glass-scroll-button) is clicked
-	// when navigating to a new page
-	function page_scroll(scrollto, speed, callback) {
-		$('html,body').stop().animate({ scrollTop: scrollto }, speed, callback);
+
+/* ============================
+ *  Global Variables
+ * ============================ */
+
+glassApp.dom = {
+	navbar: function() {
+		return document.getElementsByClassName('glass-nav')[0];
+	},
+	header: function() {
+		return document.getElementsByClassName('glass-header')[0];
+	},
+	headerWrapper: function() {
+		return document.getElementsByClassName('glass-header-wrapper')[0];
+	},
+	scrollButton: function() {
+		return document.getElementById('glass-scroll-button');
+	},
+	ajaxContainer: function() {
+		return document.getElementById('glass-ajax-container');
+	},
+	coverImage: function() {
+		return document.getElementById('glass-cover-image');
+	},
+	postContent: function() {
+		return document.getElementsByClassName('glass-post-content')[0];
+	}
+};
+
+glassApp.vars = {
+	// used for navbar behavior
+	lastScrollTop: 0,
+	navbarHeight: glassApp.dom.navbar().offsetHeight,
+	// stores interval timer ID for video resize
+	resizeVideosLoop: undefined,
+	// stores animationFrame ID for header animation
+	animateHeaderLoop: undefined
+};
+
+/* ============================
+ *  Page Setup
+ * ============================ */
+
+
+glassApp.pageSetup = {
+
+	addEndMark: function() {
+		var postContent = glassApp.dom.postContent();
+
+		if (postContent) {
+			var lastElement = postContent.lastElementChild,
+				endPost = document.createElement('hr');
+			endPost.className = 'endpost';
+
+			// add tombstone
+			if (lastElement.nodeName === 'P') {
+				var text = document.createTextNode(' \u220E');
+				lastElement.appendChild(text);
+			}
+
+			postContent.appendChild(endPost);
+		}
+	},
+
+	setAnimateHeader: function() {
+		if (glassApp.vars.animateHeaderLoop) {
+			window.cancelAnimationFrame(glassApp.vars.animateHeaderLoop);
+		}
+		glassApp.pageSetup.animateHeader();
+	},
+
+	animateHeader: function() {
+		glassApp.vars.animateHeaderLoop = window.requestAnimationFrame(this.animateHeader.bind(this));
+
+		var headerWrapper = glassApp.dom.headerWrapper(),
+			scrollButton = glassApp.dom.scrollButton(),
+			coverFilter = document.getElementById('glass-cover-filter'),
+			windowHeight = window.innerWidth,
+			pos = Math.abs(window.pageYOffset),
+			alpha = ((windowHeight - 2 * pos) / windowHeight).toFixed(2),
+			speed = 0.4;
+
+		alpha = alpha < 0 ? 0 : alpha;
+
+		if (pos < windowHeight) {
+			var newPos = (speed * pos).toFixed(2);
+
+			// animate the header wrapper
+			headerWrapper.style.transform = 'translate3d(0,' + newPos + 'px,0)';
+			headerWrapper.style.webkitTransform = 'translate3d(0,' + newPos + 'px,0)';
+			headerWrapper.style.opacity = alpha;
+
+			// animate the scroll button
+			scrollButton.style.transform = 'translate3d(0,' + newPos + 'px,0)';
+			scrollButton.style.webkitTransform = 'translate3d(0,' + newPos + 'px,0)';
+			scrollButton.style.opacity = alpha;
+
+			// animate the cover images
+			coverFilter.style.opacity = alpha * 0.4;
+		}
+	},
+
+	setCoverImage: function() {
+		var newImage = document.querySelector('img[src$="#cover"]');
+
+		if (newImage) {
+	        glassApp.dom.coverImage().style.backgroundImage = 'url("' + newImage.src + '")';
+		    newImage.parentNode.removeChild(newImage);
+		}
+	},
+
+	setSubtitle: function() {
+		// grabs #subtitle from post content and moves it to the header
+		var subtitle = document.getElementById('subtitle');
+		if (subtitle) {
+			glassApp.dom.headerWrapper().appendChild(subtitle);
+		}
+	},
+
+	centerTitle: function() {
+		// vertically centers .glass-header-wrapper
+		var headerWrapper = glassApp.dom.headerWrapper(),
+			windowHeight = window.innerHeight;
+		// set top margin
+		headerWrapper.style.marginTop = (windowHeight - headerWrapper.offsetHeight) / 2 + 'px';
+	},
+
+	resizeVideos: function(videos) {
+		var oldWidth = videos[0].offsetWidth,
+			newWidth = videos[0].parentNode.offsetWidth;
+
+		if (oldWidth !== newWidth) {
+			for (var i = 0; i < videos.length; i++) {
+				var video = videos[i],
+					aspectRatio = video.dataset ? video.dataset.aspectRatio : video.getAttribute('data-aspect-ratio');
+
+				video.style.width = newWidth + 'px';
+				video.style.height = newWidth * aspectRatio + 'px';
+			}
+		}
+	},
+
+	setResponsiveVideo: function() {
+		// get all the videos
+		var videos = document.querySelectorAll('iframe[src*="//www.youtube.com"], iframe[src*="//player.vimeo.com"]');
+
+		// strip iframes of their height/width attributes
+		if (videos.length) {
+			for (var i = 0; i < videos.length; i++) {
+				var video = videos[i],
+					aspectRatio = video.height / video.width;
+
+				// store aspect ratio using dataset with fallback
+				// there are shims for this, but this is all I really need it for
+				if (video.dataset) {
+					video.dataset.aspectRatio = aspectRatio;
+				} else {
+					video.setAttribute('data-aspect-ratio', aspectRatio);
+				}
+
+				video.removeAttribute('height');
+				video.removeAttribute('width');
+				video.style.height = video.offsetWidth * aspectRatio + 'px';
+			}
+			// check if videos need resize (global glassApp.vars.resizeVideosLoop needed)
+			glassApp.vars.resizeVideosLoop = window.setInterval(function() {
+				glassApp.pageSetup.resizeVideos(videos);
+			}, 500);
+		} else {
+			// cancel previous animations
+			window.clearInterval(glassApp.vars.resizeVideosLoop);
+		}
+	},
+
+	resizeCaptions: function() {
+		var captions = document.getElementsByClassName('caption');
+
+		function update(j) {
+			var caption = captions[j];
+			// set onload handler for image within caption div
+			caption.getElementsByTagName('img')[0].onload = function() {
+				caption.style.width = caption.getElementsByTagName('img')[0].offsetWidth + 'px';
+			};
+		}
+
+		if (captions.length) {
+			for (var i = 0; i < captions.length; i++) {
+				// closure to protect variables
+				// and prevent memory leaks/utter chaos
+				update(i);
+			}
+		}
+	},
+
+	init: function() {
+		glassApp.pageSetup.addEndMark();
+		// set subtitle before centering, otherwise it'll be off
+		glassApp.pageSetup.setSubtitle();
+		glassApp.pageSetup.centerTitle();
+		glassApp.pageSetup.setCoverImage();
+		glassApp.pageSetup.setResponsiveVideo();
+		glassApp.pageSetup.resizeCaptions();
+		if (window.innerWidth > 768) {
+			glassApp.pageSetup.setAnimateHeader();
+		}
+	},
+
+	reload: function() {
+		glassApp.pageSetup.init();
+		// re-scans for code blocks
+		Prism.highlightAll();
 	}
 
-	function toggle_navbar() {
-		var top = $window.scrollTop();
+};
+
+
+/* ============================
+ *  Events
+ * ============================ */
+
+glassApp.events = {
+
+	toggleNavbar: function() {
+		var scrollPosition = window.pageYOffset,
+			requiredScroll = 20,
+			lastScrollTop = glassApp.vars.lastScrollTop,
+			windowHeight = window.innerHeight,
+			navbar = glassApp.dom.navbar();
 
 		// return if less than required_scroll
-		if (Math.abs(last_scroll_top - top) <= required_scroll) {
+		if (Math.abs(lastScrollTop - scrollPosition) <= requiredScroll) {
 			return;
 		}
 
 		// if current position > last position AND scrolled past cover page...
-		if (top > last_scroll_top && top > window_height - navbar_height){
+		if (scrollPosition > lastScrollTop && scrollPosition > windowHeight){
 			// scroll Down
-			$navbar.addClass('glass-nav-up');
-		} else if (top + window_height < $(document).height()) { 
-			$navbar.removeClass('glass-nav-up');
+			navbar.classList.add('glass-nav-up');
+		} else if (scrollPosition + windowHeight < document.body.offsetHeight) { 
+			navbar.classList.remove('glass-nav-up');
 		}
 
-		last_scroll_top = top;
-	}
+		glassApp.vars.lastScrollTop = scrollPosition;
+	},
 
-	// adds end mark to end of posts
-	function add_end_mark() {
-		var $wrapper = $('.glass-post-content'),
-			$last_element = $wrapper.children().last();
+	scrollHashlinks: function(e) {
+		e.preventDefault();
 
-		if ($last_element.is('p')) {
-			$last_element.append(' &#8718;');
-		} else {
-			$wrapper.append('<hr class="endpost">');
+		var targetId = e.target.href.split('#')[1], // gets hash value w/o the leading "#"
+			targetEl = document.getElementById(targetId);
+		
+		// if target exists, animate it
+		if (targetEl) {
+			smoothScroll.scroll(glassApp.utility.findPosition(targetEl), 800);
 		}
-	}
+	},
 
-	function set_subtitle() {
-		var $subtitle = $('#subtitle'),
-			$headline = $('.glass-headline');
+	delegateSetup: function() {
+		// instantiate event delegation object
+		var delegate = new Delegate(document.body);
 
-		$subtitle.remove();
-		$headline.after($subtitle);
+		var siteUrl = document.location.origin,
+			// these links have separate handlers
+			not = ':not([href^="#"]):not(.older-posts):not(.newer-posts)',
+			// get all internal links
+			internalLinks = 'a[href^="' + siteUrl + '"]' + not + ',' +
+				'a[href^="/"]' + not + ',' +
+				'a[href^="./"]' + not + ',' +
+				'a[href^="../"]' + not;
 
-	}
+		// delegate for smooth-scrolling hashlinks (say that 5 times fast)
+		delegate.on('click', 'a[href^="#"]', glassApp.events.scrollHashlinks);
 
-	function center_title() {
-		// reset header wrapper css, then re-center the header wrapper
-		$header_wrapper.css({
-			margin: 0,
-			width: 'auto',
-			left: 'auto',
-			bottom: 'auto'
-		}).css({
-			top: Math.floor((navbar_height + window_height - $header_wrapper.outerHeight()) / 2),
-			left: Math.floor((window_width - $header_wrapper.outerWidth()) / 2)
-		});
-	}
-
-	// set header height
-	function set_header_height() {
-		// set cover height to window height
-		$('.glass-header').height(window_height);
-	}
-
-	// sets up cover image
-	function set_cover_image() {
-		var $cover = $('img[src$="#cover"]');
-
-		set_header_height();
-
-		if ($cover.length) {
-			var cover_url = $cover.attr('src');
-			// remove <p> tags
-			$cover.parent().remove();
-			// set the new cover image
-			$('.glass-cover-image, .glass-cover-image-back').css('backgroundImage', 'url(' + cover_url + ')');
-		}
-	}
-
-	// animates the header, not called on mobile
-	function animate_header() {
-		// call this function whenever the browser has a sec
-        window.requestAnimationFrame(animate_header);
-
-		var pos = Math.abs($window.scrollTop()),
-			alpha = ((window_height - 1.5 * pos) / window_height).toFixed(2),
-			speed = 0.3;
-
-		if (alpha < 0) {
-			alpha = 0;
-		}
-	
-		if (pos < window_height) {
-			$('.glass-header-wrapper, .glass-scroll-button').css({
-				'transform': 'translate3d(0,' + (speed * pos).toFixed(2) + 'px,0)',
-				'opacity': alpha
-			});
-			$('.glass-cover-image').css('opacity', alpha);
-		}
-	}
-
-	// strips iframes of their height/width attributes
-	function responsive_video_setup() {
-
-		$all_videos.each(function() {
-		    var $el = $(this);
-		    $el.data('aspect_ratio', $(this).attr('height') / $(this).attr('width'))
-		    	.height($el.width() * $el.data('aspect_ratio'));
-		});
-
-		// check if videos need resize
-		window.requestAnimationFrame(resize_videos);
-
-	}
-
-	// resizes iframes to fit container
-	function resize_videos() {
-
-		window.requestAnimationFrame(resize_videos);
-
-		var old_vid_width = $all_videos.first().width(),
-			new_vid_width = $('.glass-post-body .glass-wrapper').width();
-
-		if (new_vid_width !== old_vid_width) {
-			$all_videos.each(function() {
-			    var $el = $(this);
-			    $el.width(new_vid_width).height(new_vid_width * $el.data('aspect_ratio'));
-			});
-		}
-
-	}
-
-	function resize_captions() {
-
-		if ($captions.length) {
-			$captions.each(function() {
-				var $this = $(this);
-
-				$this.find('img').on('load', function() {
-					var new_caption_width = $(this).width();
-					$this.width(new_caption_width);
-				});
-			});
-		}
-	}
-
-	function update_pagination($new_page) {
-			// get html of new page
-		var new_page_links = $new_page.find('.pagination'),
-			// get new previous link
-		 	$new_page_prev = $('.older-posts', new_page_links),
-			// get new next link
-			$new_page_next = $('.newer-posts', new_page_links),
-			// get new page number
-			new_page_number = $('.page-number', new_page_links).html(),
-			$new_href_prev = $new_page_prev.attr('href'),
-			$new_href_next = $new_page_next.attr('href');
-
-
-		if ( ! $new_page_prev.attr('href') ) {
-			$prev.addClass('hidden');
-		} else {
-			$prev.removeClass('hidden');
-		}
-
-		if ( ! $new_page_next.attr('href') ) {
-			$next.addClass('hidden');
-		} else {
-			$next.removeClass('hidden');
-		}
-
-		$page_number.html(new_page_number);
-		$prev.attr('href', $new_href_prev);
-		$next.attr('href', $new_href_next);
-	}
-
-	function update_title(new_title) {
-		$('title').html(new_title);
-	}
-
-	function update_page(new_title, $new_page, new_page_body) {
-
-		// update title w/ page number
-		update_title(new_title);
-		// update pagination
-		update_pagination($new_page);
-		// change page body
-		$glass_posts.html(new_page_body);
-
-	}
-
-	function page_transition(link, scrollto, popstate) {
-
-		// default popstate is false
-		if(typeof(popstate) === 'undefined') {
-			popstate = false;
-		}
-
-		$.get(link, function(new_page) {
-			var $new_page = $(new_page),
-				new_posts = $('#glass-posts', $new_page).first().html(),
-				new_title = $new_page.filter('title').text();
-
-			// if not reached via browser back/forward
-			if (!popstate) {
-
-				// update the browser history
-				history.pushState({
-					slug: location.pathname.replace('/', '')
-				}, new_title, link);
-
-				// scroll to top, then load new page content
-				$glass_posts.animate({ 'opacity': 0 }, 200, function() {
-					page_scroll(scrollto, 500, function() {
-
-						update_page(new_title, $new_page, new_posts);
-
-						$glass_posts.animate({ 'opacity': 1 }, 200);
-					});
-				});
-
-			} else {
-				update_page(new_title, $new_page, new_posts);
+		// delegate for internal links
+		delegate.on('click', internalLinks, function(e) {
+			e.preventDefault();
+			var eventTarget = e.target;
+			// make sure target is an anchor tag, not some nested element
+			while (eventTarget && eventTarget.nodeName !== 'A') {
+				eventTarget = eventTarget.parentNode;
 			}
+			// load the new page
+			glassApp.hijax.loadPage(eventTarget.href);
 		});
-	}
 
-	function glass_smooth_scroll() {
-		// Smooth scrolling hash links
-		// via http://css-tricks.com/snippets/jquery/smooth-scrolling/
-		$('a[href*=#]:not([href=#])').click(function() {
-		    if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') && location.hostname === this.hostname) {
-		      var target = $(this.hash);
-		      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-		      if (target.length) {
-		        page_scroll(target.offset().top, 1000);
-		        return false;
-		      }
-		    }
+		// delegate for pagination
+		delegate.on('click', '.older-posts, .newer-posts', function(e) {
+			e.preventDefault();
+			// load the new page
+			glassApp.hijax.loadPage(e.target.href, false, document.getElementById('glass-posts-ajax'), true);
 		});
+	},
+
+	init: function() {
+
+		var scrolled;
+
+		// set up event delegation
+		glassApp.events.delegateSetup();
+
+		// event handler for back/forward
+		window.onpopstate = function() {
+			// load the new page
+			glassApp.hijax.loadPage(window.location.href, true);
+		};
+
+		// toggle navbar on scroll
+		window.onscroll = function() {
+			scrolled = true;
+		};
+
+		// checks navbar every 200ms for changes
+		setInterval(function() {
+			if (scrolled) {
+				glassApp.events.toggleNavbar();
+				scrolled = false;
+			}
+		}, 200);
+
 	}
 
-	// called if window is resized
-	function resize_window() {
-		var new_window_width = $window.width(),
-			new_window_height = $window.height();
+};
 
-		if (new_window_width === window_width && new_window_height === window_height) {
-			return;
-		}
 
-		// set new window width variable
-		window_width = new_window_width;
-		window_height = new_window_height;
 
-		// reset header height and center the title
-		set_header_height();
-		center_title();
-	}
 
-	function init() {
+/* ============================
+ *  History Management
+ * ============================ */
 
-		// sets the initial app state if there isn't one set (e.g. after reload)
+
+glassApp.history = {
+
+	update: function(link, new_title) {
+		history.pushState({
+			slug: location.pathname.replace('/', '')
+		}, new_title, link);
+	},
+
+	init: function() {
+		// set history state if there isn't one
 		if (typeof history.replaceState !== 'undefined') {
 			history.replaceState({
 				slug: location.pathname.replace('/', '')
 			}, null, null);
 		}
-
-		// set the cover image
-		set_cover_image();
-		// set subtitle
-		set_subtitle();
-		// center title
-		center_title();
-		// append end marks to posts
-		add_end_mark();
-		// resize captions to img width...
-		resize_captions();
-		// set smooth scrolling
-		glass_smooth_scroll();
-		// setup responsive videos
-		responsive_video_setup();
-
-		// prevent aminations on mobile
-		if (window_width > 768) {
-
-			// animate the header on scroll
-			window.requestAnimationFrame(animate_header);
-
-			// used to toggle navbar on scroll
-			$window.scroll(function() {
-				scrolled = true;
-			});
-
-			// checks navbar every 200ms for changes
-			setInterval(function() {
-				if (scrolled) {
-					toggle_navbar();
-					scrolled = false;
-				}
-			}, 200);
-		}
-
-
-		$window.resize(function() {
-			resize_window();
-		});
-
-		$(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
-			resize_window();
-		});
-
-		// next and previous page action
-		$prev.add($next).click(function(e) {
-			var scrollto = window_height - navbar_height;
-			e.preventDefault();
-			// page_transition WIHTOUT popstate
-			page_transition(e.target.href, scrollto);
-		});
-
-		// browser's back/forward buttons
-		window.onpopstate = function() {
-			var link = location.href;
-			// page_transition WITH popstate (only triggered with browser back/forward buttons)
-			page_transition(link, null, true);
-		};
 	}
 
-	init();
+};
 
-})(jQuery);
+
+/* ============================
+ *  Ajax
+ * ============================ */
+
+
+glassApp.hijax = {
+
+	updateContent: function(xhr, ajaxContainer) {
+		var bodyClass = xhr.responseXML.body.getAttribute('class');
+		// update title
+		document.title = xhr.responseXML.title;
+		// update body class
+		document.body.setAttribute('class', bodyClass);
+		// load the content
+		ajaxContainer.innerHTML = xhr.responseXML.getElementById(ajaxContainer.id).innerHTML;
+		// reinitialize page setup
+		glassApp.pageSetup.reload();
+	},
+
+	loadPage: function(url, popstate, ajaxContainer, smooth) {
+
+		var xhr = new XMLHttpRequest();
+
+		ajaxContainer = ajaxContainer || glassApp.dom.ajaxContainer();
+		var scrollto = glassApp.utility.findPosition(ajaxContainer);
+
+		// Refresh the page to the new URL if pushState not supported
+		if (typeof history.pushState === 'undefined') {
+			location.href = url;
+		}
+
+		xhr.onreadystatechange = function() {
+
+			if (xhr.readyState === 4 && xhr.status === 200) {
+
+				// if reached via back/forward
+				if (popstate) {
+					// just load the stuff
+					glassApp.hijax.updateContent(xhr, ajaxContainer);
+				} else {
+					// update the history
+					glassApp.history.update(url, xhr.responseXML.title);
+					// fade out w/ callback
+					glassApp.utility.fade('out', 100, ajaxContainer, function() {
+
+						// scroll to top						
+						if (smooth) {
+
+							// callbacks galore
+							smoothScroll.scroll(scrollto, 400, function() {
+
+								// load the stuff
+								glassApp.hijax.updateContent(xhr, ajaxContainer);
+								// fade it in
+								glassApp.utility.fade('in', 300, ajaxContainer);
+
+							});
+
+						} else {
+
+							// load the stuff
+							glassApp.hijax.updateContent(xhr, ajaxContainer);
+							// fade it in
+							window.setTimeout(function() {
+								window.scrollTo(0, scrollto);
+								glassApp.utility.fade('in', 300, ajaxContainer);
+							}, 400);
+
+						}
+
+					});
+				}
+			}
+		};
+
+		xhr.open('GET', url, true);
+		xhr.responseType = "document";
+		xhr.send();
+
+	},
+
+	init: function() {}
+};
+
+
+/* ============================
+ *  Utility Functions
+ * ============================ */
+
+ glassApp.utility = {
+
+ 	// Fade function (mostly) by Todd Motto
+ 	// http://toddmotto.com/raw-javascript-jquery-style-fadein-fadeout-functions-hugo-giraudel/
+
+	fade: function(type, duration, el, callback) {
+
+		if (callback) {
+			window.setTimeout(callback, duration + 100);
+		}
+
+		var isIn = type === 'in',
+			opacity = isIn ? 0 : 1,
+			interval = 30,
+			gap = interval / duration;
+
+		if (isIn) {
+			el.style.opacity = opacity;
+		}
+
+		function func() {
+			opacity = isIn ? opacity + gap : opacity - gap;
+			el.style.opacity = opacity;
+
+			if (opacity <= 0 || opacity >= 1) {
+				window.clearInterval(fading);
+			}
+		}
+
+		var fading = window.setInterval(func, interval);
+
+	},
+
+	findPosition: function(elem) {
+	    var offsetTop = 0;
+		do {
+			if (!isNaN(elem.offsetTop)) {
+				offsetTop += elem.offsetTop;
+			}
+		} while(elem = elem.offsetParent);
+		return offsetTop;
+	}
+ };
+
+// DO IT
+glassApp.init();
 

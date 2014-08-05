@@ -20,9 +20,9 @@ $light-beige:      #f5f2f0;
 $gray:             #ddd;
 
 // margins/padding
-$margin-large:  3rem;
-$margin-medium: 1.6rem;
-$margin-small:  1rem;
+$margin-large:  50px;
+$margin-medium: 28px;
+$margin-small:  17px;
 
 // dimensions
 $header-height: 40px;
@@ -146,8 +146,10 @@ body {
 	font-weight: 300;
 	@media screen and (min-width: nth($breakpoints, 1)) {
 		font-size: $font-size * 1.1;
-	}	
+	}
+	background: $primary-dark;
 }
+
 
 .glass-wrapper {
 	position: relative;
@@ -165,7 +167,7 @@ body {
 	position: relative;
 	overflow: hidden;
 	text-align: center;
-	height: 600px;
+	height: 100vh;
 	a {
 		color: $gray;
 	}
@@ -180,34 +182,32 @@ body {
 	}
 }
 
-.glass-cover-image,
-.glass-cover-image-back {
-	z-index: -1;
+.glass-cover-image {
 	position: fixed;
 		top: 0;
 		bottom: 0;
 		left: 0;
 		right: 0;
 	display: block;
-	background: $primary-dark url() center center no-repeat;
+}
+
+#glass-cover-image {
+	z-index: -2;
+	background: $primary-dark center center no-repeat;
 	background-size: cover;
 }
 
-.glass-cover-image-back {
-	z-index: -2;
-	filter: grayscale(50%) sepia(80%);
+#glass-cover-filter {
+	z-index: -1;
+	background: $primary-dark;
+	opacity: 0.4;
 }
 
+
 .glass-header-wrapper {
-	position: absolute;
-	bottom: 30%;
-	left: 50%;
-	width: 700px;
-	margin-left: -350px;
-	padding: $margin-medium;
-	background: $transparent-dark;
+	display: inline-block;
+	margin: 250px auto 0 auto;
 	color: $primary-light;
-	@extend %border-radius;
 	max-width: $content-width;
 	@media screen and (max-width: nth($breakpoints, 1)) {
 		max-width: 90%;
@@ -225,15 +225,13 @@ body {
 	margin: $margin-small 0 0 0;
 }
 
-.glass-scroll-button {
+#glass-scroll-button {
 	position: absolute;
-	bottom: 10%;
+	bottom: 6%;
 	left: 50%;
 	margin-left: -30px;
 	width: 60px;
 	height: 60px;
-	background: $transparent-dark;
-	@extend %border-radius;
 	text-align: center;
 	&:after {
 		display: inline-block;
@@ -243,10 +241,10 @@ body {
 		color: $primary-light;
 		line-height: 60px;
 		font-size: 32px;
+		font-weight: bold;
 	}
 	&:hover {
 		text-decoration: none;
-		background: rgba($primary-dark,0.7);
 	}
 }
 
@@ -258,26 +256,26 @@ body {
 	z-index: 10;
 	position: fixed;
 	top: 0;
-  	@include transition(top 0.4s ease-in-out);
+  	@include transition(all 0.4s);
 	width: 100%;
-	height: $header-height;
-	line-height: $header-height;
+	height: $header-height * 1.5;
+	line-height: $header-height * 1.5;
 	text-align: center;
 	background: $transparent-dark;
 	color: $primary-light;
 	a {
 		color: $primary-light;
 	}
-	@media screen and (max-width: nth($breakpoints, 1)) {
-		position: absolute;
-		height: $header-height * 1.5;
-		line-height: $header-height * 1.5;
+	@media screen and (min-width: nth($breakpoints, 1)) {
+		height: $header-height;
+		line-height: $header-height;
 	}
 }
 .glass-nav-up {
-	top: -$header-height;
-	@media screen and (max-width: nth($breakpoints, 1)) {
-		top: -($header-height * 1.5);
+	transform: translate3d(0, -($header-height * 1.5), 0);
+	opacity: 0;
+	@media screen and (min-width: nth($breakpoints, 1)) {
+		transform: translate3d(0, -$header-height, 0);
 	}
 }
 .glass-nav-down {
@@ -285,16 +283,17 @@ body {
 }
 
 .glass-logo {
-	@media screen and (max-width: nth($breakpoints, 1)) {
-		display: none;
-	}
-	position: absolute;
-	left: $margin-medium;
-	top: 4px;
-	bottom: 4px;
-	img {
-		width: $header-height - 8px;
-		height: $header-height - 8px;
+	display: none;
+	@media screen and (min-width: nth($breakpoints, 1)) {
+		display: block;
+		position: absolute;
+		left: $margin-medium;
+		top: 4px;
+		bottom: 4px;
+		img {
+			width: $header-height - 8px;
+			height: $header-height - 8px;
+		}
 	}
 }
 
@@ -364,24 +363,47 @@ body {
 	right: 0;
 }
 .page-number {
-	font-size: 0.9em;
-	@media screen and (max-width: nth($breakpoints, 1)) {
-		opacity: 0;
+	opacity: 0;
+	@media screen and (min-width: nth($breakpoints, 1)) {
+		font-size: 0.9em;
 	}
+}
+
+.glass-loading {
+	z-index: -2;
+	position: fixed;
+		top: 45%;
+		left: 50%;
+	width: 50px;
+	height: 50px;
+	margin-left: -25px;
 }
 
 /* Blog Index
 ====================================== */
+
+.glass-page-body-container {
+	background: $primary-light;
+	overflow: hidden;
+}
+
+#glass-page-body {
+	// hack to get scroll to stop with navbar on header
+	margin-top: -$header-height * 1.5;
+	padding-top: $margin-large + $header-height * 1.5;
+	padding-bottom: $margin-large;
+	@media screen and (min-width: nth($breakpoints, 1)) {
+		margin-top: -$header-height;
+		padding-top: $margin-large + $header-height;
+	}
+}
 
 .glass-post-list-header {}
 .glass-post-list-title {
 	margin: $margin-small 0;
 }
 
-.glass-post-list {
-	background: $primary-light;
-	padding: $margin-large 0;
-}
+.glass-post-list {}
 
 .glass-post-list-item {
 	p {
@@ -422,7 +444,6 @@ body {
 }
 
 .glass-post-body {
-	padding: $margin-large 0;
 	background: $primary-light;
 	@extend %line-height;
 
@@ -635,7 +656,6 @@ hr.endpost {
 iframe {
 	display: block;
     margin: $margin-medium auto;
-    width: 100%;
 }
 .glass-post img {
     display: block;
@@ -746,34 +766,33 @@ sub {
 	width: 100%;
 }
 
-.align-left {
-	float: left;
-}
-.align-right {
-	float: right;
-}
-
-
 img.align-left, .caption.align-left,
 img.align-right, .caption.align-right {
-    max-width: 50% !important;
-}
-
-img.align-right, .caption.align-right {
-    margin: 0.9rem 0 0.9rem $margin-medium;
-}
-
-img.align-left, .caption.align-left {
-    margin: 0.9rem $margin-medium 0.9rem 0;
+	max-width: 100% !important;
+	margin: $margin-medium auto !important;
 }
 
 
-@media screen and (max-width: nth($breakpoints, 1)) {
+@media screen and (min-width: nth($breakpoints, 1)) {
+
+	.align-left {
+		float: left;
+	}
+	.align-right {
+		float: right;
+	}
+
 	img.align-left, .caption.align-left,
 	img.align-right, .caption.align-right {
-		float: none;
-		max-width: 100% !important;
-		margin: $margin-medium auto !important;
+	    max-width: 50% !important;
+	}
+
+	img.align-right, .caption.align-right {
+	    margin: 0.9rem 0 0.9rem $margin-medium;
+	}
+
+	img.align-left, .caption.align-left {
+	    margin: 0.9rem $margin-medium 0.9rem 0;
 	}
 }
 

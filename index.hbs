@@ -4,49 +4,50 @@
 
     {{> header}}
 
-    <div class="glass-post-list" id="glass-page-body">
-        <div class="glass-wrapper" id="glass-posts">
-            <p class="hidden"><img src="{{@blog.cover}}#cover"></p>
+    <div class="glass-page-body-container glass-post-list">
+        <div id="glass-posts-ajax">
+            <div class="glass-wrapper" id="glass-page-body">
+                <p class="hidden"><img src="{{@blog.cover}}#cover"></p>
 
-            <div class="glass-page-number">
-                Blog: Page {{pagination.page}}
-            </div>
+                <div class="glass-page-number">
+                    Blog: Page {{pagination.page}}
+                </div>
 
-            {{#foreach posts}}
-                <article class="glass-post-list-item" role="article" itemscope itemtype="http://schema.org/Article">
+                {{#foreach posts}}
+                    <article class="glass-post-list-item" role="article" itemscope itemtype="http://schema.org/Article">
 
-                    <header class="glass-post-list-item-header">
-                        <time class="glass-date" datetime="{{date format="YYYY-MM-DD"}}" itemprop="datePublished">
-                            {{date format='MMMM DD, YYYY'}}
-                        </time>
-                        <h3 class="glass-post-list-title" itemprop="headline"><a href="{{url}}">{{title}}</a></h3>
-                    </header>
+                        <header class="glass-post-list-item-header">
+                            <time class="glass-date" datetime="{{date format="YYYY-MM-DD"}}" itemprop="datePublished">
+                                {{date format='MMMM DD, YYYY'}}
+                            </time>
+                            <h3 class="glass-post-list-title" itemprop="headline"><a href="{{url}}">{{title}}</a></h3>
+                        </header>
 
-                    <section class="glass-post-excerpt cf" itemprop="articleBody">
-                        {{excerpt words=80}} &hellip; <a class="button glass-read-more" href="{{url}}" title="Keep reading: {{title}}">Keep Reading &rArr;</a>
-                    </section>
+                        <section class="glass-post-excerpt cf" itemprop="articleBody">
+                            {{excerpt words=80}} &hellip; <a class="button glass-read-more" href="{{url}}" title="Keep reading: {{title}}">Keep Reading &rArr;</a>
+                        </section>
 
-                    {{#if tags}}
-                        <div class="glass-tags">
-                            Tags: {{tags separator=" &middot; "}}
-                        </div>
+                        {{#if tags}}
+                            <div class="glass-tags">
+                                Tags: {{tags separator=" &middot; "}}
+                            </div>
+                        {{/if}}
+
+                    </article>
+                    {{#if @last}}
+                        <hr>
+                    {{else}}
+                        <hr class="squares">
                     {{/if}}
+                {{/foreach}}
 
-                </article>
-                {{#if @last}}
-                    <hr>
-                {{else}}
-                    <hr class="squares">
+                {{#if pagination}}
+                    <div class="glass-pagination">
+                        {{{pagination}}}
+                    </div>
                 {{/if}}
-            {{/foreach}}
-
-        </div>
-
-        {{#if pagination}}
-            <div class="glass-pagination glass-wrapper">
-                {{{pagination}}}
             </div>
-        {{/if}}
+        </div>
 
     </div>
 </div>
