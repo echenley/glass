@@ -220,7 +220,7 @@ glassApp.pageSetup = {
 
 	init: function() {
 		glassApp.pageSetup.addEndMark();
-		// set subtitle before centering, otherwise it'll be off
+		// set subtitle before centering, otherwise it'll be too low
 		glassApp.pageSetup.setSubtitle();
 		glassApp.pageSetup.centerTitle();
 		glassApp.pageSetup.setCoverImage();
@@ -404,7 +404,7 @@ glassApp.hijax = {
 	loadPage: function(url, popstate, ajaxContainer, smooth) {
 
 		var xhr = new XMLHttpRequest();
-
+		
 		ajaxContainer = ajaxContainer || glassApp.dom.ajaxContainer();
 		var scrollto = glassApp.utility.findPosition(ajaxContainer);
 
