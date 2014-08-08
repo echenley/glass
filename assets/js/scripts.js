@@ -8,6 +8,7 @@
 
 var glassApp = glassApp || {};
 
+
 /* ============================
  *  Initialize App
  * ============================ */
@@ -28,6 +29,7 @@ glassApp.init = function() {
 /* ============================
  *  App-wide Variables
  * ============================ */
+
 
 glassApp.dom = {
     navbar: function() {
@@ -62,6 +64,7 @@ glassApp.vars = {
     // stores animationFrame ID for header animation
     animateHeaderLoop: undefined
 };
+
 
 /* ============================
  *  Page Setup
@@ -237,7 +240,7 @@ glassApp.pageSetup = {
         glassApp.pageSetup.init();
         // re-scans for code blocks
         Prism.highlightAll();
-        // Refresh mathJax
+        // Refresh MathJax
         if (typeof MathJax === 'object') {
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         }
@@ -249,6 +252,7 @@ glassApp.pageSetup = {
 /* ============================
  *  Events
  * ============================ */
+
 
 glassApp.events = {
 
@@ -359,8 +363,6 @@ glassApp.events = {
     }
 
 };
-
-
 
 
 /* ============================
@@ -477,6 +479,7 @@ glassApp.hijax = {
  *  Utility Functions
  * ============================ */
 
+
  glassApp.utility = {
 
     // Fade function by Todd Motto, altered slightly
@@ -521,6 +524,7 @@ glassApp.hijax = {
         return offsetTop;
     }
  };
+
 
 // DO IT
 glassApp.init();
