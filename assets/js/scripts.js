@@ -26,7 +26,7 @@ glassApp.init = function() {
 
 
 /* ============================
- *  Global Variables
+ *  App-wide Variables
  * ============================ */
 
 glassApp.dom = {
@@ -71,6 +71,7 @@ glassApp.vars = {
 glassApp.pageSetup = {
 
     addEndMark: function() {
+        // appends a tombstone to the article
         var postContent = glassApp.dom.postContent();
 
         if (postContent) {
@@ -78,7 +79,6 @@ glassApp.pageSetup = {
                 endPost = document.createElement('hr');
             endPost.className = 'endpost';
 
-            // add tombstone
             if (lastElement.nodeName === 'P') {
                 var text = document.createTextNode(' \u220E');
                 lastElement.appendChild(text);
@@ -96,6 +96,8 @@ glassApp.pageSetup = {
     },
 
     animateHeader: function() {
+        // sets up the fade effect on scroll
+        // via requestAnimationFrame loop
         glassApp.vars.animateHeaderLoop = window.requestAnimationFrame(this.animateHeader.bind(this));
 
         var headerWrapper = glassApp.dom.headerWrapper(),
@@ -127,8 +129,8 @@ glassApp.pageSetup = {
     },
 
     setCoverImage: function() {
+        // Glass-theme specific - gets first image with #cover in the src
         var newImage = document.querySelector('img[src$="#cover"]');
-
         if (newImage) {
             glassApp.dom.coverImage().style.backgroundImage = 'url("' + newImage.src + '")';
             newImage.parentNode.removeChild(newImage);
@@ -473,9 +475,8 @@ glassApp.hijax = {
 
  glassApp.utility = {
 
-    // Fade function (mostly) by Todd Motto
+    // Fade function by Todd Motto, altered slightly
     // http://toddmotto.com/raw-javascript-jquery-style-fadein-fadeout-functions-hugo-giraudel/
-
     fade: function(type, duration, el, callback) {
 
         if (callback) {
@@ -504,6 +505,8 @@ glassApp.hijax = {
 
     },
 
+    // Finds the offset of an element from the top of the document
+    // http://www.quirksmode.org/js/findpos.html
     findPosition: function(elem) {
         var offsetTop = 0;
         do {

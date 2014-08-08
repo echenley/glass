@@ -182,27 +182,22 @@ body {
 	}
 }
 
-.glass-cover-image {
+.glass-cover {
 	position: fixed;
 		top: 0;
 		bottom: 0;
 		left: 0;
 		right: 0;
 	display: block;
-}
-
-#glass-cover-image {
-	z-index: -2;
 	background: $primary-dark center center no-repeat;
 	background-size: cover;
+	z-index: -2;
 }
 
 #glass-cover-filter {
 	z-index: -1;
-	background: $primary-dark;
 	opacity: 0.4;
 }
-
 
 .glass-header-wrapper {
 	display: inline-block;
