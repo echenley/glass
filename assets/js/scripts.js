@@ -237,6 +237,10 @@ glassApp.pageSetup = {
         glassApp.pageSetup.init();
         // re-scans for code blocks
         Prism.highlightAll();
+        // Refresh mathJax
+        if (typeof MathJax === 'object') {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }
     }
 
 };
