@@ -47,7 +47,7 @@ var smoothScroll = (function() {
 
 		// set an interval timer for scrolling
 		function startPageScroll() {
-			scrollInterval = window.setInterval(loopPageScroll, interval);
+			scrollInterval = setInterval(loopPageScroll, interval);
 		}
 
 		startPageScroll();
