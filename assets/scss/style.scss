@@ -691,6 +691,14 @@ sub {
 /* Helper Classes
 ====================================== */
 
+.border-radius {
+	border-radius: 10px;
+}
+
+.box-shadow {
+	box-shadow: -2px 2px 0px 0px rgba(0,0,0,0.75);
+}
+
 .caption {
 	// width is set via js function resize_captions()
 	margin: $margin-medium auto;
