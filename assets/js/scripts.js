@@ -58,6 +58,7 @@ glassApp.dom = {
 glassApp.vars = {
     // used for navbar behavior
     lastScrollTop: 0,
+    // navbar height
     navbarHeight: glassApp.dom.navbar().offsetHeight,
     // stores interval timer ID for video resize
     resizeVideosLoop: undefined,
@@ -151,9 +152,9 @@ glassApp.pageSetup = {
     centerTitle: function() {
         // vertically centers .glass-header-wrapper
         var headerWrapper = glassApp.dom.headerWrapper(),
-            windowHeight = window.innerHeight;
+            headerHeight = glassApp.dom.header().offsetHeight;
         // set top margin
-        headerWrapper.style.marginTop = (windowHeight - headerWrapper.offsetHeight) / 2 + 'px';
+        headerWrapper.style.marginTop = (headerHeight - headerWrapper.offsetHeight) / 2 + 'px';
     },
 
     resizeVideos: function(videos) {
@@ -260,7 +261,7 @@ glassApp.events = {
         var scrollPosition = window.pageYOffset,
             requiredScroll = 20,
             lastScrollTop = glassApp.vars.lastScrollTop,
-            windowHeight = window.innerHeight,
+            headerHeight = glassApp.dom.header().offsetHeight,
             navbar = glassApp.dom.navbar();
 
         // return if less than required_scroll
@@ -269,10 +270,10 @@ glassApp.events = {
         }
 
         // if current position > last position AND scrolled past cover page...
-        if (scrollPosition > lastScrollTop && scrollPosition > windowHeight){
+        if (scrollPosition > lastScrollTop && scrollPosition > headerHeight){
             // scroll Down
             navbar.classList.add('glass-nav-up');
-        } else if (scrollPosition + windowHeight < document.body.offsetHeight) { 
+        } else if (scrollPosition + headerHeight < document.body.offsetHeight) { 
             navbar.classList.remove('glass-nav-up');
         }
 

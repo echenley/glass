@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="description" content="{{meta_description}}">
 
-    {{! Page Meta }}
     <title>
         {{#if posts}}
             {{@blog.title }} | {{@blog.description}}{{#if pagination.prev}} | Page {{pagination.page}}{{/if}}
@@ -15,7 +14,6 @@
         {{/if}}
     </title>
     
-
     {{! Styles }}
     <link rel="stylesheet" type="text/css" href="{{asset "css/style.css"}}">
     <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic|Roboto+Slab:300' rel='stylesheet' type='text/css'>
@@ -49,6 +47,9 @@
 
     {{ghost_foot}}
 
+    {{! Underscore/Backbone}}
+    <script src="{{asset "js/min/underscore-min.js"}}"></script>
+    <script src="{{asset "js/min/backbone-min.js"}}"></script>
     {{! Glass scripts}}
     <script src="{{asset "js/min/scripts-min.js"}}"></script>
     {{! Mathjax configuration}}
