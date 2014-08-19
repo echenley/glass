@@ -617,7 +617,7 @@ code {
 	@extend %border-radius;
 	font-family: $monospace;
 	background: $light-beige;
-	font-size: 0.7em;
+	font-size: 0.75em;
 	@media screen and (min-width: nth($breakpoints, 1)) {
 		font-size: 0.8em;
 	}
