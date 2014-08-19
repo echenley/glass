@@ -141,6 +141,7 @@ body,
 html {}
 
 body {
+    -webkit-text-size-adjust: 100%;
 	font-family: $sans-serif;
 	font-size: $font-size;
 	font-weight: 300;
@@ -673,7 +674,6 @@ pre {
 	font-family: $monospace;
 	line-height: 1.2;
 	@extend %border-radius;
-
 	&.wrap-text code {
 		white-space: pre-wrap;
 	}
