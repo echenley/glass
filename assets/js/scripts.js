@@ -51,7 +51,6 @@ var glassApp = (function($) {
 
             var headerWrapper = $('.glass-header-wrapper', true),
                 scrollButton = $('#glass-scroll-button', true),
-                coverFilter = $('#glass-cover-filter', true),
                 windowHeight = window.innerWidth,
                 pos = Math.abs(window.pageYOffset),
                 alpha = ((windowHeight - 2 * pos) / windowHeight).toFixed(2),
@@ -71,9 +70,6 @@ var glassApp = (function($) {
                 scrollButton.style.transform = 'translate3d(0,' + newPos + 'px,0)';
                 scrollButton.style.webkitTransform = 'translate3d(0,' + newPos + 'px,0)';
                 scrollButton.style.opacity = alpha;
-
-                // animate the cover images
-                coverFilter.style.opacity = alpha * 0.4;
             }
         }
 
