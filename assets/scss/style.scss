@@ -34,7 +34,7 @@ $breakpoints: (768px,1280px);
 /* Typography
 ====================================== */
 
-$font-size: 110%;
+$font-size: 100%;
 $line-height: 1.6;
 
 $serif: "Roboto Slab", "Times New Roman", serif;
@@ -175,7 +175,7 @@ body {
 }
 
 .glass-headline {
-	text-shadow: 2px 2px 0 rgba($primary-dark, 0.3);
+    text-shadow: 0px 0px 100px $primary-dark;
 	font-size: 4.2rem;
 	line-height: 1.1;
 	margin-bottom: 0;
@@ -201,6 +201,7 @@ body {
 	margin: 250px auto 0 auto;
 	color: $primary-light;
 	max-width: $content-width;
+    text-shadow: 0px 0px 50px $primary-dark;
 	@media screen and (max-width: nth($breakpoints, 1)) {
 		max-width: 90%;
 	}

@@ -109,12 +109,12 @@ body,
 body {
   text-size-adjust: 100%;
   font-family: "Lato", sans-serif;
-  font-size: 110%;
+  font-size: 100%;
   font-weight: 300;
   background: #000; }
   @media screen and (min-width: 768px) {
     body {
-      font-size: 121.0%; } }
+      font-size: 110.0%; } }
 
 .glass-wrapper {
   position: relative;
@@ -134,7 +134,7 @@ body {
     color: #ddd; }
 
 .glass-headline {
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  text-shadow: 0px 0px 100px #000;
   font-size: 4.2rem;
   line-height: 1.1;
   margin-bottom: 0; }
@@ -157,7 +157,8 @@ body {
   display: inline-block;
   margin: 250px auto 0 auto;
   color: #fff;
-  max-width: 700px; }
+  max-width: 700px;
+  text-shadow: 0px 0px 50px #000; }
   @media screen and (max-width: 768px) {
     .glass-header-wrapper {
       max-width: 90%; } }
